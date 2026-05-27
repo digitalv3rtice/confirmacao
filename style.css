@@ -1,33 +1,56 @@
+/* Fontes */
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+@import url(https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap);
 
-/* Estilos Gerais (Mantidos do seu código) */
-.login-page {
-  width: 100%; /* Largura total para admin */
-  padding: 8% 0 0;
-  margin: auto;
+/* --- FUNDO --- */
+body {
+  background-image:url("img/fundo.png");
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
+
+/* --- PÁGINA --- */
+.login-page {
+  width: 100%;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+/* --- FORMULÁRIO --- */
 .form {
-  position: relative;
-  z-index: 1;
   background: #FFFFFF;
   max-width: 360px;
-  margin: 0 auto 100px;
-  padding: 45px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 30px 20px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   border-radius: 10px;
+  box-sizing: border-box;
 }
+
+/* --- INPUTS --- */
 .form input {
   font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
   border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
+  margin: 0 0 12px;
+  padding: 12px;
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: 16px; /* Maior para celular */
+  border-radius: 5px;
 }
+
+/* --- BOTÃO --- */
 .form button {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -35,31 +58,117 @@
   background: #4CAF50;
   width: 100%;
   border: 0;
-  padding: 15px;
+  padding: 14px;
   color: #FFFFFF;
   font-size: 14px;
   cursor: pointer;
-}
-.form button:hover { background: #43A047; }
-.form .message { margin: 15px 0 0; color: #b3b3b3; font-size: 12px; }
-.form .message a { color: #4CAF50; text-decoration: none; }
-body {
-  background-image: url("img/fundo.png") ;
-  font-family: "Roboto", sans-serif;
-  -webkit-font-smoothing: antialiased;
+  border-radius: 5px;
+  margin-top: 10px;
 }
 
-/* Novos Estilos para a Lista e Tabela */
-table {
+.form button:hover { background: #43A047; }
+
+/* --- MENSAGENS --- */
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+
+.form .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+/* --- TÍTULOS h2 --- */
+h2 {
+  font-family: 'Indie Flower', cursive;
+  font-size: 28px;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+/* --- MENSAGEM --- */
+.form p {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+/* ============================================
+   RESPONSIVO PARA CELULAR
+   ============================================ */
+@media (max-width: 480px) {
+  .login-page {
+    padding: 10px 5px;
+  }
+
+  .form {
+    padding: 20px 15px;
+    margin: 10px auto;
+    border-radius: 8px;
+  }
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+
+  .form input {
+    padding: 14px 12px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .form button {
+    padding: 16px;
+    font-size: 16px;
+    margin-top: 15px;
+  }
+
+  /* Tabela responsiva */
+  table {
+    font-size: 12px;
+  }
+
+  table th, table td {
+    padding: 6px 4px;
+  }
+
+  /* Containers na admin */
+  #listContainer {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    text-align: left;
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 400px;
+  }
 }
-th, td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
+
+/* ============================================
+   RESPONSIVO PARA TABLET
+   ============================================ */
+@media (min-width: 481px) and (max-width: 768px) {
+  .form {
+    max-width: 400px;
+    padding: 35px 25px;
+  }
+
+  h2 {
+    font-size: 30px;
+  }
 }
-th {
-    background-color: #f2f2f2;
+
+/* ============================================
+   TELAS GRANDES (PC)
+   ============================================ */
+@media (min-width: 769px) {
+  .login-page {
+    padding: 8% 0 0;
+  }
+
+  .form {
+    max-width: 360px;
+    padding: 45px;
+  }
 }
