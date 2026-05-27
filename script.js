@@ -1,15 +1,15 @@
 /*
    CONFIGURAÇÃO DO SUPABASE
+   Cole aqui as suas credenciais:
 */
 const SUPABASE_URL = "https://tilbjlzybyfuylyyonbh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbGJqbHp5YnlmdXlseXlvbmJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDgxMDYsImV4cCI6MjA5NTQ4NDEwNn0.8JFBScIJcRV8iKvI4OqGz0xtsSgTlzqNIo_AfckHGSw\n";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbGJqbHp5YnlmdXlseXlvbmJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDgxMDYsImV4cCI6MjA5NTQ4NDEwNn0.8JFBScIJcRV8iKvI4OqGz0xtsSgTlzqNIo_AfckHGSw";
 
 /*
    SENHA DO ADMIN
-   Mude abaixo: "123456" é a senha atual
+   Mude abaixo:
 */
 const SENHA_ADMIN = "123456";
-
 
 
 // --- FUNÇÕES DO SUPABASE ---
@@ -44,7 +44,9 @@ async function getConfirmations() {
 
 async function downloadCSV() {
     const confirmations = await getConfirmations();
-    if (confirmations.length === 0) {
+    console.log("Confirmations:", confirmations);
+
+    if (!confirmations || confirmations.length === 0) {
         alert('Nada para baixar.');
         return;
     }
@@ -74,7 +76,7 @@ async function clearData() {
         });
     }
     alert('Dados apagados!');
-    window.location.reload();
+    location.reload();
 }
 
 
@@ -101,9 +103,6 @@ function generateGuestFields() {
 function loginAdmin() {
     const passwordInput = document.getElementById('adminPassword').value;
 
-    console.log("Senha digitada:", passwordInput);
-    console.log("Senha correta:", SENHA_ADMIN);
-
     if (passwordInput === SENHA_ADMIN) {
         localStorage.setItem('adminLogado', 'true');
         document.getElementById('loginScreen').style.display = 'none';
@@ -117,6 +116,7 @@ function loginAdmin() {
 async function carregarLista() {
     const listContainer = document.getElementById('listContainer');
     const confirmations = await getConfirmations();
+    console.log("Dados recebidos:", confirmations);
 
     if (!confirmations || confirmations.length === 0) {
         listContainer.innerHTML = '<p>Nenhuma confirmação ainda.</p>';
@@ -138,7 +138,9 @@ async function carregarLista() {
 
     confirmations.forEach((conf, index) => {
         let date = new Date(conf.created_at).toLocaleDateString('pt-BR');
-        let companions = conf.acompanhantes?.join(', ') || '-';
+        let companions = conf.acompanhantes && conf.acompanhantes.length > 0
+            ? conf.acompanhantes.join(', ')
+            : '-';
         html += `<tr style="border-bottom:1px solid #ddd;">
             <td>${index + 1}</td>
             <td>${date}</td>
@@ -152,7 +154,7 @@ async function carregarLista() {
     listContainer.innerHTML = html;
 }
 
-// --- VERIFICAR PÁGINA ---
+// --- INICIALIZAÇÃO ---
 
 document.addEventListener('DOMContentLoaded', function() {
     const confirmationForm = document.getElementById('confirmationForm');
@@ -174,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmationForm.reset();
                 document.getElementById('guestsContainer').innerHTML = '';
             } else {
-                alert('Erro ao enviar. Verifique a configuração do Supabase.');
+                alert('Erro ao enviar.');
             }
         });
     }
