@@ -7,10 +7,14 @@
 /* =========================================
    BODY
 ========================================= */
-body {
+html, body {
+  width: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+}
+
+body {
   font-family: "Roboto", sans-serif;
   background-image: url("img/fundo.png");
   background-size: cover;
@@ -37,6 +41,7 @@ body::before {
 ========================================= */
 .login-page {
   width: 100%;
+  min-height: 100vh;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -69,6 +74,7 @@ h2 {
   color: #43A047;
   font-size: 40px;
   font-weight: bold;
+  font-family: 'Indie Flower', cursive;
 }
 
 /* =========================================
@@ -109,12 +115,7 @@ h2 {
   margin-top: 8px;
   border: none;
   border-radius: 16px;
-  background: linear-gradient(
-    135deg,
-    #4CAF50,
-    #2E7D32
-  );
-
+  background: #4CAF50;
   color: white;
   font-size: 17px;
   font-weight: bold;
@@ -125,8 +126,7 @@ h2 {
 /* HOVER */
 .form button:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 6px 18px rgba(76,175,80,0.35);
+  box-shadow: 0 6px 18px rgba(76,175,80,0.35);
 }
 
 /* CLICK */
@@ -158,6 +158,18 @@ h2 {
   text-align: left;
 }
 
+/* ADMIN - FORMULÁRIO MAIOR */
+#adminScreen .form {
+  max-width: 900px !important;
+}
+#adminScreen {
+  display: none;
+}
+
+#adminScreen.active {
+  display: flex;
+}
+
 /* =========================================
    TABELA
 ========================================= */
@@ -168,8 +180,7 @@ table {
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow:
-    0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 table th {
@@ -187,7 +198,7 @@ table td {
 }
 
 /* =========================================
-   RESPONSIVO
+   RESPONSIVO CELULAR
 ========================================= */
 @media (max-width: 480px) {
 
@@ -197,6 +208,7 @@ table td {
 
   .login-page {
     padding: 18px;
+    min-height: auto;
   }
 
   .form {
@@ -233,7 +245,11 @@ table td {
   table th,
   table td {
     padding: 10px;
-
     font-size: 14px;
+  }
+
+  /* ADMIN NO CELULAR */
+  #adminScreen .form {
+    max-width: 100% !important;
   }
 }
