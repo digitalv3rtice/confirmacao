@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-page" id="loginScreen">
+        <div class="form">
+            <form class="login-form" id="adminLoginForm">
+                <h2>Área Administrativa</h2>
+                <input type="password" id="adminPassword" placeholder="Digite a senha" required/>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="login-page" id="adminScreen" style="display: none;">
+        <div class="form" style="max-width: 600px;">
+            <h2>Lista de Confirmados</h2>
+
+            <div id="listContainer">
+                <p>Nenhuma confirmação ainda.</p>
+            </div>
+
+            <button onclick="downloadCSV()" style="margin-top: 20px; background-color: #2196F3;">Baixar Planilha (Excel)</button>
+
+            <button onclick="clearData()" style="margin-top: 10px; background-color: #f44336;">Limpar Todos os Dados</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

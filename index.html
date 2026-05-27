@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmação de Presença</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="img/casal.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-page">
+        <div class="form">
+            <form class="login-form" id="confirmationForm">
+                <h2 style="font-family: 'Dancing Script', cursive; font-size: 40px; color: #43A047;">Confirme sua Presença</h2>
+                <input type="text" id="mainName" placeholder="Seu Nome Completo" required/>
+                <input type="number" id="qty" placeholder="Quantas pessoas vão com você?" min="0" onchange="generateGuestFields()" required/>
+                <div id="guestsContainer"></div>
+                <button type="submit">Confirmar</button>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
