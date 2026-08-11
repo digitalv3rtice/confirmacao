@@ -1,30 +1,67 @@
 /*
    CONFIGURAÇÃO DO SUPABASE
 */
-const SUPABASE_URL = "https://tilbjlzybyfuylyyonbh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpbGJqbHp5YnlmdXlseXlvbmJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5MDgxMDYsImV4cCI6MjA5NTQ4NDEwNn0.8JFBScIJcRV8iKvI4OqGz0xtsSgTlzqNIo_AfckHGSw";
+const SUPABASE_URL = "https://enluhezbeitujlgmikxd.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVubHVoZXpiZWl0dWpsZ21pa3hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MDcwOTYsImV4cCI6MjEwMTk4MzA5Nn0.pljANF4XcutK4z0-LaIoY_9YV_fhDX2dFgv7GISlkiE";
 
 const SENHA_ADMIN = "123456";
 
 
 // --- FUNÇÕES DO SUPABASE ---
 
+function safeJsonParse(value) {
+    if (!value) return [];
+    try {
+        const parsed = JSON.parse(value);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        return [];
+    }
+}
+
 async function saveConfirmation(data) {
+    const nome = String(data.mainName || '').trim();
+    const quantidade = Number(data.qtyGuests) || 0;
+    const acompanhantes = Array.isArray(data.guestNames) ? data.guestNames : [];
+
+    if (!nome) {
+        throw new Error('O nome é obrigatório.');
+    }
+
     const response = await fetch(`${SUPABASE_URL}/rest/v1/confirmados`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=representation'
         },
         body: JSON.stringify({
-            nome: data.mainName,
-            quantidade: data.qtyGuests,
-            acompanhantes: JSON.stringify(data.guestNames),  // Salva como texto
+            nome,
+            quantidade,
+            acompanhantes: JSON.stringify(acompanhantes),
             created_at: new Date().toISOString()
         })
     });
-    return response.ok;
+
+    const bodyText = await response.text();
+    let body = null;
+
+    try {
+        body = bodyText ? JSON.parse(bodyText) : null;
+    } catch (error) {
+        body = null;
+    }
+
+    if (!response.ok) {
+        const message = body && body.message ? body.message : `Erro do Supabase (${response.status})`;
+        const finalMessage = message.toLowerCase().includes('row level security') || message.toLowerCase().includes('policy') || message.toLowerCase().includes('permission')
+            ? 'A inserção foi bloqueada pelo Supabase. Verifique a política RLS da tabela confirmados ou crie uma política de INSERT permitida para o público.'
+            : message;
+        throw new Error(finalMessage);
+    }
+
+    return true;
 }
 
 async function getConfirmations() {
@@ -48,8 +85,8 @@ async function downloadCSV() {
 
     confirmations.forEach(conf => {
         let date = new Date(conf.created_at).toLocaleDateString('pt-BR');
-        // Converte de texto para array
-        let companions = conf.acompanhantes ? JSON.parse(conf.acompanhantes).join(' / ') : '';
+        const companionsList = safeJsonParse(conf.acompanhantes);
+        let companions = companionsList.length > 0 ? companionsList.join(' / ') : '';
         let row = `${date},"${conf.nome}",${conf.quantidade},"${companions}"`;
         csvContent += row + "\n";
     });
@@ -131,8 +168,7 @@ async function carregarLista() {
 
     confirmations.forEach((conf, index) => {
         let date = new Date(conf.created_at).toLocaleDateString('pt-BR');
-        // Converte de texto para array na hora de exibir
-        let companionsList = conf.acompanhantes ? JSON.parse(conf.acompanhantes) : [];
+        let companionsList = safeJsonParse(conf.acompanhantes);
         let companions = companionsList.length > 0 ? companionsList.join(', ') : '-';
 
         html += `<tr style="border-bottom:1px solid #ddd;">
@@ -161,16 +197,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const qtyInput = document.getElementById('qty').value;
             let guestNames = [];
             document.querySelectorAll('.guest-name').forEach(input => {
-                if (input.value.trim()) guestNames.push(input.value);
+                if (input.value.trim()) guestNames.push(input.value.trim());
             });
 
-            const sucesso = await saveConfirmation({ mainName, qtyGuests: parseInt(qtyInput) || 0, guestNames });
-            if (sucesso) {
-                alert('Confirmado com sucesso!');
-                confirmationForm.reset();
-                document.getElementById('guestsContainer').innerHTML = '';
-            } else {
-                alert('Erro ao enviar.');
+            try {
+                const sucesso = await saveConfirmation({
+                    mainName,
+                    qtyGuests: parseInt(qtyInput) || 0,
+                    guestNames
+                });
+
+                if (sucesso) {
+                    alert('Confirmado com sucesso!');
+                    confirmationForm.reset();
+                    document.getElementById('guestsContainer').innerHTML = '';
+                }
+            } catch (error) {
+                console.error(error);
+                alert(error.message || 'Erro ao enviar.');
             }
         });
     }
